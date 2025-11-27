@@ -1,15 +1,15 @@
 # 🤖 Proyecto: API de Chatbot de Telegram (Laravel 11)
 
-¡Hola! Este es el código que desarrollé para la pt, implementando una API que integra mi bot de Telegram con un panel de administracion en Laravel.
+¡Hola! Este es el código que desarrollé para la prueba técnica, implementando una API que integra mi bot de Telegram con un panel de administración en Laravel.
 
-El objetivo principal fue crear una arquitectura limpia y testeable (TDD) capaz de recibir mensajes, guardarlos y enviar respuestas automaticas, dejando la puerta abierta para integrar IA avanzada facilmente.
+El objetivo principal fue crear una arquitectura limpia y testeable (TDD) capaz de recibir mensajes, guardarlos y enviar respuestas automáticas, dejando la puerta abierta para integrar IA avanzada fácilmente.
 
 ## 🚀 Características Clave y Logros
 
 * **Piping de Telegram Completo:** Recibo mensajes por **Webhook** y los guardo inmediatamente.
 * **Respuesta Automática Inteligente (Plus IA):** El bot responde automáticamente a cada mensaje, y el sistema está desacoplado para ser conectado a un LLM (como Gemini o GPT) solo cambiando una línea de código.
 * **Panel Administrativo (CRM Básico):** Un panel protegido por *login* donde puedo ver todas las conversaciones históricas y enviar mensajes manuales a los contactos.
-* **Código de Calidad:** Arquitectura basada en Capas y Patrones de Diseño (Service/Contract/Inyección de Dependencias).
+* **Código de Calidad:** Arquitectura basada en Capas y Patrones de Diseño (**Service/Contract/Inyección de Dependencias**).
 * **Testing TDD:** Feature Tests para la seguridad, persistencia de datos y funcionalidad de respuesta del Webhook, que demuestran la fiabilidad del sistema.
 
 ## ⚙️ Configuración del Entorno (¡Para que funcione en tu máquina!)
@@ -21,17 +21,20 @@ Necesitas **PHP 8.2+**, **Composer**, **npm** y una base de datos **MySQL** acce
 1.  **Clonar y Configurar Dependencias:**
 
     ```bash
-    git clone [https://aws.amazon.com/es/what-is/repo/](https://aws.amazon.com/es/what-is/repo/) telegram-bot-api
+    # Clona el repo
+    git clone [https://github.com/guillermoecr/pt-telegram-bot.git](https://github.com/guillermoecr/pt-telegram-bot.git) telegram-bot-api 
     cd telegram-bot-api
+    
+    # Instala PHP y JS
     composer install
     npm install
     npm run dev
     ```
 
 2.  **Archivos de Entorno (`.env`):**
-    * Copia `.env.example` a `.env`.
-    * **Base de Datos:** Configura tu conexión MySQL (`DB_CONNECTION=mysql`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
-    * **Telegram:** Debes obtener tu `BOT_TOKEN` de BotFather y crear tu propio *secret* para seguridad.
+    * Copia `.env.example` a `.env` y genera la clave de la aplicación: `php artisan key:generate`.
+    * Configura tu conexión MySQL.
+    * **Telegram:** Obtén tu `BOT_TOKEN` de BotFather y crea tu propio *secret*.
 
     ```dotenv
     # Sección Telegram
@@ -39,21 +42,25 @@ Necesitas **PHP 8.2+**, **Composer**, **npm** y una base de datos **MySQL** acce
     TELEGRAM_WEBHOOK_SECRET="clave-unica-secreta-ejemplo-de-seguridad" 
     ```
 
-3.  **Base de Datos y Usuario Admin:**
-    * Crea una base de datos vacía.
-    * Ejecuta las migraciones (incluyendo nuestras tablas de `chats`, `conversations` y `messages`).
-    * Crea el usuario que usaremos para acceder al panel:
+3.  **Base de Datos y Usuario Admin (CRÍTICO):**
+    * Crea la base de datos vacía.
+    * Ejecuta la migración y la siembra de datos con un solo comando. Usamos el `migrate:fresh` para asegurar una base limpia.
 
     ```bash
-    php artisan migrate
-    php artisan tinker
-    \App\Models\User::factory()->create(['email' => 'admin@example.com', 'password' => bcrypt('password')]);
-    exit;
+    # Este comando borra tablas, migra y crea el usuario admin (admin@example.com / password).
+    php artisan migrate:fresh --seed
     ```
-    *Credenciales de acceso: **admin@example.com** / **password***
 
-4.  **Habilitar Rutas API (CRÍTICO en Laravel 11):**
-    Asegúrate de que `bootstrap/app.php` tenga la línea `api:` habilitada para que el Webhook funcione (esto se solucionó en la fase de desarrollo).
+4.  **Activación del Webhook (Paso Final y Crítico):**
+    * **Problema:** Telegram solo puede enviar mensajes a URLs públicas (`HTTPS`). Necesitas un túnel (Ngrok, Expose) para obtener una URL pública (`https://ejemplo.io`).
+    * **Solución:** Una vez que tengas tu URL pública, usa este comando para registrar el Webhook en la API de Telegram. **Asegúrate de incluir el `/api/telegram/webhook/TU_SECRET` al final de tu URL.**
+
+    ```bash
+    php artisan tinker
+    >>> $service = app(\App\Services\TelegramService::class);
+    >>> $service->setWebhook('TU_URL_PUBLICA_CON_SECRET');
+    ```
+    *(Ejemplo de URL a registrar: `https://tunel.ngrok.io/api/telegram/webhook/clave-unica-secreta-ejemplo-de-seguridad`)*
 
 ## 🧭 Arquitectura y Diseño Técnico
 
@@ -72,5 +79,5 @@ El proyecto sigue una arquitectura organizada para facilitar el mantenimiento y 
 Todos los tests de seguridad y funcionalidad del Webhook deben pasar:
 
 ```bash
-# Correr los tests principales del Webhook
-php artisan test --filter TelegramWebhookTest
+# Correr la suite completa (incluye seguridad, persistencia y respuesta automática)
+php artisan test

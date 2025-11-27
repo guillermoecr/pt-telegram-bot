@@ -1,15 +1,15 @@
 # 🤖 Proyecto: API de Chatbot de Telegram (Laravel 11)
 
-¡Hola! Este es el código que desarrollé para la prueba técnica, implementando una API que integra mi bot de Telegram con un panel de administración en Laravel.
+Hola! Este es el código que desarrollé para la pt, implementando una API que integra mi bot de Telegram con un panel de administracion en Laravel.
 
-El objetivo principal fue crear una arquitectura limpia y testeable (TDD) capaz de recibir mensajes, guardarlos y enviar respuestas automáticas, dejando la puerta abierta para integrar IA avanzada fácilmente.
+El objetivo principal fue crear una arquitectura limpia y testeable capaz de recibir mensajes, guardarlos y enviar respuestas automáticas, dejando la puerta abierta para integrar IA avanzada facilmente.
 
 ## 🚀 Características Clave y Logros
 
 * **Piping de Telegram Completo:** Recibo mensajes por **Webhook** y los guardo inmediatamente.
 * **Respuesta Automática Inteligente (Plus IA):** El bot responde automáticamente a cada mensaje, y el sistema está desacoplado para ser conectado a un LLM (como Gemini o GPT) solo cambiando una línea de código.
-* **Panel Administrativo (CRM Básico):** Un panel protegido por *login* donde puedo ver todas las conversaciones históricas y enviar mensajes manuales a los contactos.
-* **Código de Calidad:** Arquitectura basada en Capas y Patrones de Diseño (**Service/Contract/Inyección de Dependencias**).
+* **Panel Administrativo (CRM Basico):** Un panel protegido por *login* donde puedo ver todo el historial de conversaciones y enviar mensajes manuales a los contactos.
+* **Código de Calidad:** Arquitectura basada en Capas y Patrones de Diseño (Service/Contract/Inyección de Dependencias).
 * **Testing TDD:** Feature Tests para la seguridad, persistencia de datos y funcionalidad de respuesta del Webhook, que demuestran la fiabilidad del sistema.
 
 ## ⚙️ Configuración del Entorno (¡Para que funcione en tu máquina!)
@@ -22,7 +22,7 @@ Necesitas **PHP 8.2+**, **Composer**, **npm** y una base de datos **MySQL** acce
 
     ```bash
     # Clona el repo
-    git clone [https://github.com/guillermoecr/pt-telegram-bot.git](https://github.com/guillermoecr/pt-telegram-bot.git) telegram-bot-api 
+    git clone https://github.com/guillermoecr/pt-telegram-bot.git telegram-bot-api 
     cd telegram-bot-api
     
     # Instala PHP y JS
@@ -79,5 +79,5 @@ El proyecto sigue una arquitectura organizada para facilitar el mantenimiento y 
 Todos los tests de seguridad y funcionalidad del Webhook deben pasar:
 
 ```bash
-# Correr la suite completa (incluye seguridad, persistencia y respuesta automática)
+# Correr la suite completa ya incluye seguridad, persistencia y respuesta automatica...
 php artisan test
